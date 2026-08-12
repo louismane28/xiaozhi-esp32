@@ -3,61 +3,45 @@
 
 #include <driver/gpio.h>
 
+// --- System Core ---
 #define AUDIO_INPUT_SAMPLE_RATE  16000
 #define AUDIO_OUTPUT_SAMPLE_RATE 24000
+#define BUILTIN_LED_GPIO         GPIO_NUM_3
+#define BOOT_BUTTON_GPIO         GPIO_NUM_0
 
-#define AUDIO_I2S_MIC_GPIO_SCK  GPIO_NUM_38
-#define AUDIO_I2S_MIC_GPIO_DIN  GPIO_NUM_39
-#define AUDIO_I2S_SPK_GPIO_DOUT GPIO_NUM_42
-#define AUDIO_I2S_SPK_GPIO_BCLK GPIO_NUM_45
-#define AUDIO_I2S_SPK_GPIO_LRCK GPIO_NUM_46
-#define AUDIO_I2S_SPK_GPIO_GAIN GPIO_NUM_41
+// --- Audio (Speaker & Microphone) ---
+// Speaker (GND/BLCK -> IO45, LRCLK -> IO39, DIN -> IO0)
+#define AUDIO_I2S_SPK_GPIO_BCLK  GPIO_NUM_45
+#define AUDIO_I2S_SPK_GPIO_LRCK  GPIO_NUM_39
+#define AUDIO_I2S_SPK_GPIO_DOUT  GPIO_NUM_0
+#define AUDIO_I2S_SPK_GPIO_GAIN  GPIO_NUM_NC
 
-#define BUILTIN_LED_GPIO        GPIO_NUM_3
-#define BOOT_BUTTON_GPIO        GPIO_NUM_0
-#define TOUCH_BUTTON_GPIO       GPIO_NUM_NC
-#define VOLUME_UP_BUTTON_GPIO   GPIO_NUM_NC
-#define VOLUME_DOWN_BUTTON_GPIO GPIO_NUM_NC
-#define RESET_NVS_BUTTON_GPIO     GPIO_NUM_NC
-#define RESET_FACTORY_BUTTON_GPIO GPIO_NUM_NC
+// Microphone (SCK -> IO8, WS -> IO46, SD -> IO48)
+#define AUDIO_I2S_MIC_GPIO_SCK   GPIO_NUM_8
+#define AUDIO_I2S_MIC_GPIO_WS    GPIO_NUM_46
+#define AUDIO_I2S_MIC_GPIO_DIN   GPIO_NUM_48
 
-/* DFRobot Camera pins */
-#define PWDN_GPIO_NUM       GPIO_NUM_NC
-#define RESET_GPIO_NUM      GPIO_NUM_NC
-#define XCLK_GPIO_NUM       GPIO_NUM_5
-#define Y9_GPIO_NUM         GPIO_NUM_4
-#define Y8_GPIO_NUM         GPIO_NUM_6
-#define Y7_GPIO_NUM         GPIO_NUM_7
-#define Y6_GPIO_NUM         GPIO_NUM_14
-#define Y5_GPIO_NUM         GPIO_NUM_17
-#define Y4_GPIO_NUM         GPIO_NUM_21
-#define Y3_GPIO_NUM         GPIO_NUM_18
-#define Y2_GPIO_NUM         GPIO_NUM_16
-#define VSYNC_GPIO_NUM      GPIO_NUM_1
-#define HREF_GPIO_NUM       GPIO_NUM_2
-#define PCLK_GPIO_NUM       GPIO_NUM_15
-#define SIOD_GPIO_NUM       GPIO_NUM_8
-#define SIOC_GPIO_NUM       GPIO_NUM_9
+// --- Sensors & Servos ---
+// Ultrasonic Sensor (Trig -> IO5, Echo -> IO6)
+#define ULTRASONIC_TRIG_GPIO     GPIO_NUM_5
+#define ULTRASONIC_ECHO_GPIO     GPIO_NUM_6
 
-/* Camera pins */
-#define CAMERA_PIN_PWDN     PWDN_GPIO_NUM
-#define CAMERA_PIN_RESET    RESET_GPIO_NUM
-#define CAMERA_PIN_XCLK     XCLK_GPIO_NUM
-#define CAMERA_PIN_SIOD     SIOD_GPIO_NUM
-#define CAMERA_PIN_SIOC     SIOC_GPIO_NUM
+// Neck Servo / Cat Face (Signal -> IO4)
+#define NECK_SERVO_GPIO          GPIO_NUM_4
 
-#define CAMERA_PIN_D7       Y9_GPIO_NUM
-#define CAMERA_PIN_D6       Y8_GPIO_NUM
-#define CAMERA_PIN_D5       Y7_GPIO_NUM
-#define CAMERA_PIN_D4       Y6_GPIO_NUM
-#define CAMERA_PIN_D3       Y5_GPIO_NUM
-#define CAMERA_PIN_D2       Y4_GPIO_NUM
-#define CAMERA_PIN_D1       Y3_GPIO_NUM
-#define CAMERA_PIN_D0       Y2_GPIO_NUM
-#define CAMERA_PIN_VSYNC    VSYNC_GPIO_NUM
-#define CAMERA_PIN_HREF     HREF_GPIO_NUM
-#define CAMERA_PIN_PCLK     PCLK_GPIO_NUM
+// --- OLED Screen (I2C Face Display) ---
+#define DISPLAY_I2C_SDA_GPIO     GPIO_NUM_SDA  // Or match board standard I2C pins
+#define DISPLAY_I2C_SCL_GPIO     GPIO_NUM_SCL
 
-#define XCLK_FREQ_HZ 20000000
+// --- LED Lights ---
+#define LEFT_LED_GPIO            GPIO_NUM_3
+#define LEFT_LED_EXTRA_GPIO      GPIO_NUM_38
+#define RIGHT_LED_GPIO           GPIO_NUM_40
+#define RIGHT_LED_EXTRA_GPIO     GPIO_NUM_41
 
-#endif  // _BOARD_CONFIG_H_
+// --- Line Tracking Sensors ---
+#define LINE_TRACK_S1_GPIO       GPIO_NUM_16
+#define LINE_TRACK_S2_GPIO       GPIO_NUM_NC  // Tied to 3V3 constant read if static, or configure pin
+#define LINE_TRACK_S3_GPIO       GPIO_NUM_17  // Ground reference / data line
+
+#endif // _BOARD_CONFIG_H_
