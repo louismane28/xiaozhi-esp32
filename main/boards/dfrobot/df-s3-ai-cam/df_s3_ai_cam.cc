@@ -31,6 +31,38 @@ class DfrobotEsp32S3AiCam : public WifiBoard {
         });
     }
 
+    void InitializeRobotHardware() {
+        // Configure Ultrasonic Sensor Pins
+        gpio_config_t io_conf = {};
+        io_conf.intr_type = GPIO_INTR_DISABLE;
+        io_conf.mode = GPIO_MODE_OUTPUT;
+        io_conf.pin_bit_mask = (1ULL << ULTRASONIC_TRIG_GPIO);
+        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+        gpio_config(&io_conf);
+
+        io_conf.mode = GPIO_MODE_INPUT;
+        io_conf.pin_bit_mask = (1ULL << ULTRASONIC_ECHO_GPIO);
+        gpio_config(&io_conf);
+
+        // Configure Neck Servo Pin
+        io_conf.mode = GPIO_MODE_OUTPUT;
+        io_conf.pin_bit_mask = (1ULL << NECK_SERVO_GPIO);
+        gpio_config(&io_conf);
+
+        // Configure Extra LED Lights
+        io_conf.pin_bit_mask = (1ULL << LEFT_LED_EXTRA_GPIO) | (1ULL << RIGHT_LED_GPIO) | (1ULL << RIGHT_LED_EXTRA_GPIO);
+        gpio_config(&io_conf);
+
+        // Configure Line Tracking Sensors
+        io_conf.mode = GPIO_MODE_INPUT;
+        io_conf.pin_bit_mask = (1ULL << LINE_TRACK_S1_GPIO) | (1ULL << LINE_TRACK_S3_GPIO);
+        io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+        gpio_config(&io_conf);
+
+        ESP_LOGI(TAG, "Custom robot hardware pins initialized successfully.");
+    }
+
     void InitializeCamera() {
         static esp_cam_ctlr_dvp_pin_config_t dvp_pin_config = {
             .data_width = CAM_CTLR_DATA_WIDTH_8,
@@ -87,10 +119,9 @@ class DfrobotEsp32S3AiCam : public WifiBoard {
     DfrobotEsp32S3AiCam() :
         boot_button_(BOOT_BUTTON_GPIO) {
         InitializeButtons();
+        InitializeRobotHardware();
         InitializeCamera();
     }
-
-    // Wakenet model only
 
     virtual Led* GetLed() override {
         static GpioLed led(BUILTIN_LED_GPIO, 0);
@@ -98,6 +129,7 @@ class DfrobotEsp32S3AiCam : public WifiBoard {
     }
 
     virtual AudioCodec* GetAudioCodec() override {
+        // Matches your custom mic (WS/SCK/DIN) and speaker (BCLK/LRCK/DOUT) pins from config.h
         static NoAudioCodecSimplexPdm audio_codec(AUDIO_INPUT_SAMPLE_RATE, AUDIO_OUTPUT_SAMPLE_RATE,
             AUDIO_I2S_SPK_GPIO_BCLK, AUDIO_I2S_SPK_GPIO_LRCK, AUDIO_I2S_SPK_GPIO_DOUT,
             AUDIO_I2S_MIC_GPIO_SCK, AUDIO_I2S_MIC_GPIO_DIN);
